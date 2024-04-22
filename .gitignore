@@ -2,3 +2,5 @@
 .Rhistory
 .RData
 .Ruserdata
+*.stswp
+01-example-swjm/*.log
