@@ -11,7 +11,7 @@ The content of this repository is organised as follows:
 
 1. The `02-example-swjm-individual` folder contains simulated data and code to analyse an [individually-randomised stepped wedge](https://pubmed.ncbi.nlm.nih.gov/30225934/) trial (e.g., without any cluster effect);
 
-1. The `03-simulation-code` folder contains code that could be used to reproduce the Monte Carlo simulation studies reported in the paper.
+1. The [`03-simulation-code`](03-simulation-code/) folder contains code that could be used to reproduce the Monte Carlo simulation studies reported in the paper.
    This code will be uploaded to this repository upon acceptance of the manuscript for publication.
 
 ## {simswjm} Package
