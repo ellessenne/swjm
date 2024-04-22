@@ -13,3 +13,7 @@ The content of this repository is organised as follows:
 
 1. The `03-simulation-code` folder contains code that could be used to reproduce the Monte Carlo simulation studies reported in the paper.
    This code will be uploaded to this repository upon acceptance of the manuscript for publication.
+
+## License
+
+All code included in this repository is released under the [MIT License](LICENSE.md).
