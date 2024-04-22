@@ -15,7 +15,7 @@ gsem (yobs <- ibn.j i.x M1[i]@1 M2[i>id]@1, noconstant family(gaussian))
 estimates store mod_ci_lmm
 
 // The equivalent model with -mixed- is:
-mixed yobs ibn.j i.x, noconstant || i: || id: 
+mixed yobs ibn.j i.x, noconstant || i: || id:
 
 // Joint model
 gsem ///
@@ -37,7 +37,7 @@ gsem (yobs <- ibn.j i.cumx M1[i]@1 M2[i>id]@1, noconstant family(gaussian))
 estimates store mod_gi_lmm
 
 // The equivalent model with -mixed- is:
-mixed yobs ibn.j i.cumx, noconstant || id: 
+mixed yobs ibn.j i.cumx, noconstant || i: || id:
 
 // Joint model
 gsem ///

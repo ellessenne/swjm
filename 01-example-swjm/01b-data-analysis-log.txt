@@ -3,7 +3,7 @@
        log:  /Users/ellessenne/Documents/swjm/01-example-swjm/01b-data-analysis
 > -log.txt
   log type:  text
- opened on:  22 Apr 2024, 12:48:32
+ opened on:  22 Apr 2024, 13:02:23
 
 . 
 . // Constant intervention model
@@ -84,7 +84,7 @@ var(M2[i>id])|   26.17643   1.576817                       23.2614    29.45678
 
 . 
 . // The equivalent model with -mixed- is:
-. mixed yobs ibn.j i.x, noconstant || i: || id: 
+. mixed yobs ibn.j i.x, noconstant || i: || id:
 
 Performing EM optimization ...
 
@@ -366,51 +366,61 @@ var(M2[i>id])|   23.42359   1.474512                      20.70477    26.49943
 
 . 
 . // The equivalent model with -mixed- is:
-. mixed yobs ibn.j i.cumx, noconstant || id: 
+. mixed yobs ibn.j i.cumx, noconstant || i: || id:
 
 Performing EM optimization ...
 
 Performing gradient-based optimization: 
-Iteration 0:  Log likelihood = -17013.673  
-Iteration 1:  Log likelihood = -17013.673  
+Iteration 0:  Log likelihood = -16990.621  
+Iteration 1:  Log likelihood = -16990.621  
 
 Computing standard errors ...
 
-Mixed-effects ML regression                        Number of obs    =    4,975
-Group variable: id                                 Number of groups =    1,191
-                                                   Obs per group:
-                                                                min =        1
-                                                                avg =      4.2
-                                                                max =        5
-                                                   Wald chi2(9)     = 33333.37
-Log likelihood = -17013.673                        Prob > chi2      =   0.0000
+Mixed-effects ML regression                           Number of obs =    4,975
+
+        Grouping information
+        -------------------------------------------------------------
+                        |     No. of       Observations per group
+         Group variable |     groups    Minimum    Average    Maximum
+        ----------------+--------------------------------------------
+                      i |         40         76      124.4        154
+                     id |      1,191          1        4.2          5
+        -------------------------------------------------------------
+
+                                                      Wald chi2(9)  = 14377.30
+Log likelihood = -16990.621                           Prob > chi2   =   0.0000
 
 ------------------------------------------------------------------------------
         yobs | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
 -------------+----------------------------------------------------------------
            j |
-          1  |   25.68159   .2367687   108.47   0.000     25.21753    26.14565
-          2  |   25.53958   .2635046    96.92   0.000     25.02312    26.05604
-          3  |    25.2086   .3081905    81.80   0.000     24.60456    25.81264
-          4  |   24.87311   .3842534    64.73   0.000     24.11999    25.62623
-          5  |   25.01762   .5101518    49.04   0.000     24.01774     26.0175
+          1  |   25.66725    .354471    72.41   0.000      24.9725      26.362
+          2  |   25.49824   .3741202    68.16   0.000     24.76498     26.2315
+          3  |   25.14859   .4130463    60.89   0.000     24.33903    25.95815
+          4  |   24.78871   .4866102    50.94   0.000     23.83497    25.74245
+          5  |   24.91255   .6178799    40.32   0.000     23.70152    26.12357
              |
         cumx |
-          1  |  -.1295048   .3260232    -0.40   0.691    -.7684987     .509489
-          2  |   9.822767   .4239039    23.17   0.000     8.991931     10.6536
-          3  |    19.9044   .5516991    36.08   0.000     18.82309    20.98571
-          4  |   30.10807   .7601484    39.61   0.000     28.61821    31.59793
+          1  |  -.0991832   .3467839    -0.29   0.775    -.7788672    .5805009
+          2  |   9.857594   .4607355    21.40   0.000     8.954569    10.76062
+          3  |    19.9712   .6083544    32.83   0.000     18.77885    21.16356
+          4  |   30.15631   .8376696    36.00   0.000     28.51451    31.79811
 ------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------
   Random-effects parameters  |   Estimate   Std. err.     [95% conf. interval]
 -----------------------------+------------------------------------------------
-id: Identity                 |
-                  var(_cons) |   26.40231   1.574795      23.48936    29.67651
+i: Identity                  |
+                  var(_cons) |   2.870204   .9029116      1.549319    5.317219
 -----------------------------+------------------------------------------------
-               var(Residual) |   40.36446   .9289252      38.58425     42.2268
+id: Identity                 |
+                  var(_cons) |    23.4236   1.474513      20.70478    26.49944
+-----------------------------+------------------------------------------------
+               var(Residual) |   40.38773   .9294741      38.60647    42.25118
 ------------------------------------------------------------------------------
-LR test vs. linear model: chibar2(01) = 928.67        Prob >= chibar2 = 0.0000
+LR test vs. linear model: chi2(2) = 974.78                Prob > chi2 = 0.0000
+
+Note: LR test is conservative and provided only for reference.
 
 . 
 . // Joint model
@@ -596,5 +606,5 @@ t            |
        log:  /Users/ellessenne/Documents/swjm/01-example-swjm/01b-data-analysis
 > -log.txt
   log type:  text
- closed on:  22 Apr 2024, 12:48:56
+ closed on:  22 Apr 2024, 13:02:47
 -------------------------------------------------------------------------------
