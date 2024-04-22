@@ -7,7 +7,7 @@ A preprint is available on arXiv.
 
 The content of this repository is organised as follows:
 
-1. The `01-example-swjm` folder contains simulated data and code to analyse a stepped wedge trial with the joint modelling approach that we propose in the manuscript;
+1. The [`01-example-swjm`](01-example-swjm/) folder contains simulated data and code to analyse a stepped wedge trial with the joint modelling approach that we propose in the manuscript;
 
 1. The `02-example-swjm-individual` folder contains simulated data and code to analyse an [individually-randomised stepped wedge](https://pubmed.ncbi.nlm.nih.gov/30225934/) trial (e.g., without any cluster effect);
 
