@@ -1,0 +1,540 @@
+-------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/ellessenne/Documents/swjm/02-example-swjm-individual/02b-da
+> ta-analysis-log.txt
+  log type:  text
+ opened on:  22 Apr 2024, 13:07:15
+
+. 
+. // Constant intervention model
+. 
+. use "02-dt-ci.dta", clear
+
+. compress
+  variable i was long now byte
+  variable id was long now int
+  variable j was long now byte
+  variable jid was long now int
+  variable repn was double now byte
+  variable x was double now byte
+  variable cumx was double now byte
+  variable t0 was double now byte
+  variable d was double now byte
+  (900,000 bytes saved)
+
+. save, replace
+file 02-dt-ci.dta saved
+
+. 
+. // Linear mixed-effects model
+. gsem (yobs <- ibn.j i.x M1[id]@1, noconstant family(gaussian))
+
+Fitting fixed-effects model:
+
+Iteration 0:  Log likelihood = -36345.054  
+Iteration 1:  Log likelihood = -36345.054  
+
+Refining starting values:
+
+Grid node 0:  Log likelihood =  -35905.78
+
+Fitting full model:
+
+Iteration 0:  Log likelihood =  -35905.78  
+Iteration 1:  Log likelihood =  -35400.45  
+Iteration 2:  Log likelihood =  -35394.36  
+Iteration 3:  Log likelihood = -35394.326  
+Iteration 4:  Log likelihood = -35394.326  
+
+Generalized structural equation model                   Number of obs = 10,384
+Response: yobs    
+Family:   Gaussian
+Link:     Identity
+Log likelihood = -35394.326
+
+ ( 1)  [yobs]_cons = 0
+ ( 2)  [yobs]M1[id] = 1
+------------------------------------------------------------------------------
+             | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+yobs         |
+           j |
+          1  |   25.78179     .16271   158.45   0.000     25.46288     26.1007
+          2  |   25.46869   .1804066   141.17   0.000      25.1151    25.82228
+          3  |   24.99283   .2091182   119.52   0.000     24.58297     25.4027
+          4  |    24.6111   .2443371   100.73   0.000     24.13221    25.08999
+          5  |   24.80583   .2819828    87.97   0.000     24.25315     25.3585
+             |
+         1.x |    20.4417   .2137642    95.63   0.000     20.02273    20.86067
+             |
+      M1[id] |          1  (constrained)
+             |
+       _cons |          0  (omitted)
+-------------+----------------------------------------------------------------
+  var(M1[id])|   25.30289   1.051917                      23.32293    27.45093
+-------------+----------------------------------------------------------------
+  var(e.yobs)|   39.66561   .6306632                       38.4486    40.92115
+------------------------------------------------------------------------------
+
+. estimates store mod_ci_lmm
+
+. 
+. // The equivalent model with -mixed- is:
+. mixed yobs ibn.j i.x, noconstant || id:
+
+Performing EM optimization ...
+
+Performing gradient-based optimization: 
+Iteration 0:  Log likelihood = -35394.326  
+Iteration 1:  Log likelihood = -35394.326  
+
+Computing standard errors ...
+
+Mixed-effects ML regression                       Number of obs    =    10,384
+Group variable: id                                Number of groups =     2,454
+                                                  Obs per group:
+                                                               min =         1
+                                                               avg =       4.2
+                                                               max =         5
+                                                  Wald chi2(6)     = 100522.96
+Log likelihood = -35394.326                       Prob > chi2      =    0.0000
+
+------------------------------------------------------------------------------
+        yobs | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+           j |
+          1  |   25.78179     .16271   158.45   0.000     25.46288     26.1007
+          2  |   25.46869   .1801229   141.40   0.000     25.11566    25.82173
+          3  |   24.99283   .2084787   119.88   0.000     24.58422    25.40144
+          4  |    24.6111   .2433836   101.12   0.000     24.13408    25.08812
+          5  |   24.80583   .2809083    88.31   0.000     24.25526     25.3564
+             |
+         1.x |    20.4417   .2136502    95.68   0.000     20.02296    20.86045
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+  Random-effects parameters  |   Estimate   Std. err.     [95% conf. interval]
+-----------------------------+------------------------------------------------
+id: Identity                 |
+                  var(_cons) |    25.3029   1.051918      23.32294    27.45095
+-----------------------------+------------------------------------------------
+               var(Residual) |   39.66561   .6306631      38.44859    40.92115
+------------------------------------------------------------------------------
+LR test vs. linear model: chibar2(01) = 1901.46       Prob >= chibar2 = 0.0000
+
+. 
+. // Joint model
+. gsem ///
+>         (yobs <- ibn.j i.x M1[id]@1, noconstant family(gaussian)) ///
+>         (t <- i.x M1[id], family(weibull, failure(d) lt(t0)))
+
+Fitting fixed-effects model:
+
+Iteration 0:  Log likelihood = -46929.154  
+Iteration 1:  Log likelihood = -40776.236  
+Iteration 2:  Log likelihood = -40391.045  
+Iteration 3:  Log likelihood = -40287.959  
+Iteration 4:  Log likelihood = -40287.878  
+Iteration 5:  Log likelihood = -40287.878  
+
+Refining starting values:
+
+Grid node 0:  Log likelihood = -40195.401
+
+Fitting full model:
+
+Iteration 0:  Log likelihood = -40195.401  (not concave)
+Iteration 1:  Log likelihood = -40039.268  (not concave)
+Iteration 2:  Log likelihood = -39760.356  
+Iteration 3:  Log likelihood = -39438.601  
+Iteration 4:  Log likelihood = -39351.789  
+Iteration 5:  Log likelihood = -39214.152  
+Iteration 6:  Log likelihood = -39048.791  
+Iteration 7:  Log likelihood = -39022.752  
+Iteration 8:  Log likelihood = -39027.471  
+Iteration 9:  Log likelihood = -39023.062  
+Iteration 10: Log likelihood = -39025.569  
+Iteration 11: Log likelihood = -39023.984  
+Iteration 12: Log likelihood = -39024.794  
+Iteration 13: Log likelihood =  -39024.38  
+Iteration 14: Log likelihood = -39024.593  
+Iteration 15: Log likelihood = -39024.483  
+Iteration 16: Log likelihood =  -39024.54  
+Iteration 17: Log likelihood = -39024.511  
+Iteration 18: Log likelihood = -39024.526  
+Iteration 19: Log likelihood = -39024.518  
+Iteration 20: Log likelihood = -39024.522  
+Iteration 21: Log likelihood =  -39024.52  
+
+Generalized structural equation model              Number of obs   =    12,533
+
+Response: yobs                                     Number of obs   =    10,384
+Family:   Gaussian            
+Link:     Identity            
+
+Response: t                                        Number of obs   =    12,533
+Family:   Weibull                                  No. of failures =     2,149
+Form:     Proportional hazards                     Time at risk    = 11,045.66
+Link:     Log                 
+
+Log likelihood = -39024.52
+
+ ( 1)  [yobs]_cons = 0
+ ( 2)  [yobs]M1[id] = 1
+------------------------------------------------------------------------------
+             | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+yobs         |
+           j |
+          1  |   29.88798   .1912487   156.28   0.000     29.51314    30.26282
+          2  |   30.08299   .2095457   143.56   0.000     29.67229     30.4937
+          3  |   29.82485    .235796   126.49   0.000      29.3627    30.28701
+          4  |   29.57915   .2680523   110.35   0.000     29.05377    30.10452
+          5  |   29.85823   .3022937    98.77   0.000     29.26575    30.45071
+             |
+         1.x |    20.2932   .2102264    96.53   0.000     19.88116    20.70524
+             |
+      M1[id] |          1  (constrained)
+             |
+       _cons |          0  (omitted)
+-------------+----------------------------------------------------------------
+t            |
+         1.x |  -1.095938   .0920925   -11.90   0.000    -1.276436   -.9154403
+             |
+      M1[id] |   .4222452   .0198433    21.28   0.000      .383353    .4611374
+             |
+       _cons |  -1.587863   .1039272   -15.28   0.000    -1.791557   -1.384169
+-------------+----------------------------------------------------------------
+/t           |
+        ln_p |   .0619618   .0453232                       -.02687    .1507935
+-------------+----------------------------------------------------------------
+  var(M1[id])|   54.19197   2.336267                      49.80109    58.96999
+-------------+----------------------------------------------------------------
+  var(e.yobs)|   39.49175   .6164934                      38.30174    40.71873
+------------------------------------------------------------------------------
+
+. estimates store mod_ci_jm
+
+. 
+. // Compare the estimates
+. estimates table mod_ci_lmm mod_ci_jm
+
+----------------------------------------
+    Variable | mod_ci_lmm   mod_ci_jm   
+-------------+--------------------------
+yobs         |
+           j |
+          1  |   25.78179    29.887976  
+          2  |  25.468692    30.082995  
+          3  |  24.992832    29.824855  
+          4  |    24.6111    29.579148  
+          5  |  24.805826     29.85823  
+             |
+           x |
+          1  |  20.441703    20.293199  
+             |
+      M1[id] |          1            1  
+             |
+       _cons |          0            0  
+-------------+--------------------------
+  var(M1[id])|  25.302889    54.191969  
+  var(e.yobs)|  39.665613     39.49175  
+-------------+--------------------------
+t            |
+             |
+           x |
+          1  |              -1.0959383  
+             |
+      M1[id] |               .42224519  
+             |
+       _cons |               -1.587863  
+             |
+           x |
+          1  |              -1.0959383  
+             |
+      M1[id] |               .42224519  
+             |
+       _cons |               -1.587863  
+----------------------------------------
+
+. 
+. // General time on treatment model
+. 
+. use "02-dt-gi.dta", clear
+
+. compress
+  variable i was long now byte
+  variable id was long now int
+  variable j was long now byte
+  variable jid was long now int
+  variable repn was double now byte
+  variable x was double now byte
+  variable cumx was double now byte
+  variable t0 was double now byte
+  variable d was double now byte
+  (900,000 bytes saved)
+
+. save, replace
+file 02-dt-gi.dta saved
+
+. 
+. // Linear mixed-effects model
+. gsem (yobs <- ibn.j i.cumx M1[id]@1, noconstant family(gaussian))
+
+Fitting fixed-effects model:
+
+Iteration 0:  Log likelihood = -38085.351  
+Iteration 1:  Log likelihood = -38085.351  
+
+Refining starting values:
+
+Grid node 0:  Log likelihood = -37595.099
+
+Fitting full model:
+
+Iteration 0:  Log likelihood = -37595.099  
+Iteration 1:  Log likelihood = -37073.153  
+Iteration 2:  Log likelihood = -37058.861  
+Iteration 3:  Log likelihood = -37058.547  
+Iteration 4:  Log likelihood = -37058.547  
+
+Generalized structural equation model                   Number of obs = 10,856
+Response: yobs    
+Family:   Gaussian
+Link:     Identity
+Log likelihood = -37058.547
+
+ ( 1)  [yobs]_cons = 0
+ ( 2)  [yobs]M1[id] = 1
+------------------------------------------------------------------------------
+             | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+yobs         |
+           j |
+          1  |   26.01999   .1615493   161.07   0.000     25.70336    26.33662
+          2  |   25.48208   .1796321   141.86   0.000     25.13001    25.83415
+          3  |   25.53838   .2114914   120.75   0.000     25.12387     25.9529
+          4  |    25.0562   .2640864    94.88   0.000      24.5386     25.5738
+          5  |   24.93027   .3480451    71.63   0.000     24.24812    25.61243
+             |
+        cumx |
+          1  |   .1178777   .2199843     0.54   0.592    -.3132836    .5490391
+          2  |   9.731138   .2833667    34.34   0.000      9.17575    10.28653
+          3  |    19.9549   .3667802    54.41   0.000     19.23603    20.67378
+          4  |   30.57689   .4964015    61.60   0.000     29.60396    31.54982
+             |
+      M1[id] |          1  (constrained)
+             |
+       _cons |          0  (omitted)
+-------------+----------------------------------------------------------------
+  var(M1[id])|   25.85912   1.043675                      23.89236    27.98776
+-------------+----------------------------------------------------------------
+  var(e.yobs)|   40.03875   .6206082                      38.84067    41.27378
+------------------------------------------------------------------------------
+
+. estimates store mod_gi_lmm
+
+. 
+. // The equivalent model with -mixed- is:
+. mixed yobs ibn.j i.cumx, noconstant || id:
+
+Performing EM optimization ...
+
+Performing gradient-based optimization: 
+Iteration 0:  Log likelihood = -37058.547  
+Iteration 1:  Log likelihood = -37058.547  
+
+Computing standard errors ...
+
+Mixed-effects ML regression                        Number of obs    =   10,856
+Group variable: id                                 Number of groups =    2,525
+                                                   Obs per group:
+                                                                min =        1
+                                                                avg =      4.3
+                                                                max =        5
+                                                   Wald chi2(9)     = 77011.66
+Log likelihood = -37058.547                        Prob > chi2      =   0.0000
+
+------------------------------------------------------------------------------
+        yobs | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+           j |
+          1  |   26.01999   .1615493   161.07   0.000     25.70335    26.33662
+          2  |   25.48208   .1794328   142.01   0.000      25.1304    25.83376
+          3  |   25.53838   .2108535   121.12   0.000     25.12512    25.95165
+          4  |   25.05621   .2630853    95.24   0.000     24.54057    25.57184
+          5  |   24.93028   .3466804    71.91   0.000     24.25079    25.60976
+             |
+        cumx |
+          1  |   .1178775   .2198723     0.54   0.592    -.3130643    .5488193
+          2  |   9.731138    .283095    34.37   0.000     9.176282    10.28599
+          3  |    19.9549   .3663575    54.47   0.000     19.23686    20.67295
+          4  |   30.57689   .4957594    61.68   0.000     29.60522    31.54856
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+  Random-effects parameters  |   Estimate   Std. err.     [95% conf. interval]
+-----------------------------+------------------------------------------------
+id: Identity                 |
+                  var(_cons) |   25.85916   1.043677      23.89241    27.98781
+-----------------------------+------------------------------------------------
+               var(Residual) |   40.03874   .6206081      38.84066    41.27378
+------------------------------------------------------------------------------
+LR test vs. linear model: chibar2(01) = 2053.61       Prob >= chibar2 = 0.0000
+
+. 
+. // Joint model
+. gsem ///
+>         (yobs <- ibn.j i.cumx M1[id]@1, noconstant family(gaussian)) ///
+>         (t <- i.x M1[id], family(weibull, failure(d) lt(t0)))
+
+Fitting fixed-effects model:
+
+Iteration 0:  Log likelihood = -49120.175  
+Iteration 1:  Log likelihood = -42522.428  
+Iteration 2:  Log likelihood = -42122.896  
+Iteration 3:  Log likelihood =  -42011.55  
+Iteration 4:  Log likelihood =   -42011.4  
+Iteration 5:  Log likelihood =   -42011.4  
+
+Refining starting values:
+
+Grid node 0:  Log likelihood = -41911.535
+
+Fitting full model:
+
+Iteration 0:  Log likelihood = -41911.535  (not concave)
+Iteration 1:  Log likelihood = -41738.268  (not concave)
+Iteration 2:  Log likelihood =  -41431.08  
+Iteration 3:  Log likelihood = -41111.094  
+Iteration 4:  Log likelihood =  -40900.29  
+Iteration 5:  Log likelihood = -40791.668  
+Iteration 6:  Log likelihood = -40779.897  
+Iteration 7:  Log likelihood = -40720.644  
+Iteration 8:  Log likelihood =  -40706.08  
+Iteration 9:  Log likelihood = -40698.324  
+Iteration 10: Log likelihood = -40702.188  
+Iteration 11: Log likelihood = -40698.887  
+Iteration 12: Log likelihood = -40700.334  
+Iteration 13: Log likelihood = -40699.467  
+Iteration 14: Log likelihood = -40699.787  
+Iteration 15: Log likelihood = -40699.572  
+Iteration 16: Log likelihood = -40699.626  
+Iteration 17: Log likelihood = -40699.571  
+Iteration 18: Log likelihood = -40699.574  
+Iteration 19: Log likelihood = -40699.558  
+Iteration 20: Log likelihood = -40699.554  
+Iteration 21: Log likelihood = -40699.548  
+Iteration 22: Log likelihood = -40699.545  
+Iteration 23: Log likelihood = -40699.543  
+Iteration 24: Log likelihood = -40699.541  
+Iteration 25: Log likelihood =  -40699.54  
+Iteration 26: Log likelihood = -40699.539  
+
+Generalized structural equation model              Number of obs   =    12,905
+
+Response: yobs                                     Number of obs   =    10,856
+Family:   Gaussian            
+Link:     Identity            
+
+Response: t                                        Number of obs   =    12,905
+Family:   Weibull                                  No. of failures =     2,049
+Form:     Proportional hazards                     Time at risk    = 11,497.81
+Link:     Log                 
+
+Log likelihood = -40699.539
+
+ ( 1)  [yobs]_cons = 0
+ ( 2)  [yobs]M1[id] = 1
+------------------------------------------------------------------------------
+             | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+yobs         |
+           j |
+          1  |   29.90305   .1868455   160.04   0.000     29.53684    30.26926
+          2  |   29.84263   .2049728   145.59   0.000     29.44089    30.24437
+          3  |   30.12018   .2343182   128.54   0.000     29.66092    30.57943
+          4  |   29.81146   .2817139   105.82   0.000     29.25931    30.36361
+          5  |   29.87091   .3588315    83.24   0.000     29.16761     30.5742
+             |
+        cumx |
+          1  |  -.0130316   .2164305    -0.06   0.952    -.4372277    .4111644
+          2  |   9.505482    .277628    34.24   0.000     8.961341    10.04962
+          3  |    19.6029   .3584472    54.69   0.000     18.90035    20.30544
+          4  |   30.09133   .4856739    61.96   0.000     29.13943    31.04324
+             |
+      M1[id] |          1  (constrained)
+             |
+       _cons |          0  (omitted)
+-------------+----------------------------------------------------------------
+t            |
+         1.x |  -.9181067   .0902222   -10.18   0.000    -1.094939   -.7412743
+             |
+      M1[id] |   .4158865   .0192742    21.58   0.000     .3781097    .4536633
+             |
+       _cons |  -1.741105   .1060069   -16.42   0.000    -1.948875   -1.533335
+-------------+----------------------------------------------------------------
+/t           |
+        ln_p |  -.0009696   .0446019                     -.0883878    .0864486
+-------------+----------------------------------------------------------------
+  var(M1[id])|   53.26105   2.230613                      49.06375    57.81742
+-------------+----------------------------------------------------------------
+  var(e.yobs)|   39.90167   .6087381                      38.72623    41.11279
+------------------------------------------------------------------------------
+
+. estimates store mod_gi_jm
+
+. 
+. // Compare the estimates
+. estimates table mod_gi_lmm mod_gi_jm
+
+----------------------------------------
+    Variable | mod_gi_lmm   mod_gi_jm   
+-------------+--------------------------
+yobs         |
+           j |
+          1  |  26.019986    29.903053  
+          2  |  25.482079    29.842632  
+          3  |  25.538384    30.120177  
+          4  |  25.056205    29.811464  
+          5  |  24.930275    29.870908  
+             |
+        cumx |
+          1  |  .11787772   -.01303162  
+          2  |  9.7311384    9.5054816  
+          3  |  19.954904    19.602898  
+          4  |  30.576888    30.091332  
+             |
+      M1[id] |          1            1  
+             |
+       _cons |          0            0  
+-------------+--------------------------
+  var(M1[id])|  25.859115    53.261048  
+  var(e.yobs)|  40.038745    39.901671  
+-------------+--------------------------
+t            |
+             |
+           x |
+          1  |              -.91810668  
+             |
+      M1[id] |               .41588654  
+             |
+       _cons |              -1.7411049  
+             |
+           x |
+          1  |              -.91810668  
+             |
+      M1[id] |               .41588654  
+             |
+       _cons |              -1.7411049  
+----------------------------------------
+
+. 
+. // Close log
+. log close
+      name:  <unnamed>
+       log:  /Users/ellessenne/Documents/swjm/02-example-swjm-individual/02b-da
+> ta-analysis-log.txt
+  log type:  text
+ closed on:  22 Apr 2024, 13:07:21
+-------------------------------------------------------------------------------

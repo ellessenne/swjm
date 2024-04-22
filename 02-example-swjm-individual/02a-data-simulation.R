@@ -7,20 +7,20 @@ library(here)
 library(tidyverse)
 
 ### Seed, for reproducibility
-set.seed(28734678)
+set.seed(945837)
 
 ### Data-generating parameters
 scenarios <- crossing(
   k = 100,
   tribble(
     ~omega1, ~omega2, ~omega3, # omega1 is for alpha, omega2 is for gamma, omega3 is for phi
-    log(0.9), 0.0, log(1.5),
+    0.0, 0.0, log(1.5),
   ),
   delta = 20,
-  nu = -0.5,
+  nu = -1.0,
   ln_lambda = -1.5,
   ln_p = 0.0,
-  sigma2_alpha = 2.0,
+  sigma2_alpha = 0.0,
   sigma2_gamma = 0.0,
   sigma2_phi = 55.0,
   sigma2_epsilon = 40.0,
@@ -90,11 +90,11 @@ dt_gi <- swtrial_inf(
 )
 
 ### Export datasets
-write_dta(data = dt_ci, path = here("01-example-swjm/01-dt-ci.dta"))
-write_dta(data = dt_gi, path = here("01-example-swjm/01-dt-gi.dta"))
+write_dta(data = dt_ci, path = here("02-example-swjm-individual/02-dt-ci.dta"))
+write_dta(data = dt_gi, path = here("02-example-swjm-individual/02-dt-gi.dta"))
 
 ### Export session info
-sink(file = here("01-example-swjm/01a-data-simulation-sessioninfo.txt"))
+sink(file = here("02-example-swjm-individual/02a-data-simulation-sessioninfo.txt"))
 cat("Last run:\n")
 Sys.time()
 cat("\n")
