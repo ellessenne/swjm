@@ -7,7 +7,7 @@ title: Improving convergence of the joint model estimation procedure
 Sometimes the joint model for stepped wedge cluster-randomized trials with non-ignorable dropout fails to converge due to the increased computational complexity.
 In this document, we illustrate several steps and approaches that can be used to get the joint model to converge.
 
-We start by setting the version of the Stata interpreter to version 18; this means that the following code will continue to work in all future versions of Stata, even if Stata were to change.
+We start by setting the version of the Stata interpreter to version 18; this means that the following code will continue to work in all future versions of Stata.
 
 ```{stata}
 version 18

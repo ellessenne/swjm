@@ -8,13 +8,11 @@ and approaches that can be used to get the joint model to converge.
 
 We start by setting the version of the Stata interpreter to version 18;
 this means that the following code will continue to work in all future
-versions of Stata, even if Stata were to change.
+versions of Stata.
 
 ``` stata
 version 18
 ```
-
-<style>div.jp-Notebook .datagrid-container {min-height: 448px; }</style>
 
 # Data
 
@@ -28,20 +26,20 @@ codebook, compact
 
     Variable       Obs Unique      Mean        Min       Max  Label
     -------------------------------------------------------------------------------
-    repn          8000      1         4          4         4  
-    i             8000     32      16.5          1        32  
-    id            8000   1600     800.5          1      1600  
-    j             8000      5         3          1         5  
-    jid           8000    160      80.5          1       160  
-    x             8000      2        .5          0         1  
-    cumx          8000      5         1          0         4  
-    y             8000   8000  32.93547  -6.646588  75.60858  
-    yobs          4360   4360  35.44544   4.923843  75.60858  
-    t0            5335      5  1.585942          0         4  
-    t             5335    980  2.489409   .0009573         5  
-    d             5335      2  .1827554          0         1  
-    eventtime     8000    976  3.012497   .0009573         5  
-    actual_eve~e  8000   1600   7.52727   .0009573  117.5387  
+    repn          8000      1         4          4         4
+    i             8000     32      16.5          1        32
+    id            8000   1600     800.5          1      1600
+    j             8000      5         3          1         5
+    jid           8000    160      80.5          1       160
+    x             8000      2        .5          0         1
+    cumx          8000      5         1          0         4
+    y             8000   8000  32.93547  -6.646588  75.60858
+    yobs          4360   4360  35.44544   4.923843  75.60858
+    t0            5335      5  1.585942          0         4
+    t             5335    980  2.489409   .0009573         5
+    d             5335      2  .1827554          0         1
+    eventtime     8000    976  3.012497   .0009573         5
+    actual_eve~e  8000   1600   7.52727   .0009573  117.5387
     -------------------------------------------------------------------------------
 
 Note that this dataset is one of the datasets that did not converge in
@@ -100,13 +98,13 @@ capture noisily gsem ///
     Generalized structural equation model               Number of obs   =    5,335
 
     Response: yobs                                      Number of obs   =    4,360
-    Family:   Gaussian            
-    Link:     Identity            
+    Family:   Gaussian
+    Link:     Identity
 
     Response: t                                         Number of obs   =    5,335
     Family:   Weibull                                   No. of failures =      975
     Form:     Proportional hazards                      Time at risk    = 4,819.99
-    Link:     Log                 
+    Link:     Log
 
     Log likelihood = -17586.699
 
@@ -170,13 +168,13 @@ capture noisily gsem ///
     Generalized structural equation model               Number of obs   =    5,335
 
     Response: yobs                                      Number of obs   =    4,360
-    Family:   Gaussian            
-    Link:     Identity            
+    Family:   Gaussian
+    Link:     Identity
 
     Response: t                                         Number of obs   =    5,335
     Family:   Weibull                                   No. of failures =      975
     Form:     Proportional hazards                      Time at risk    = 4,819.99
-    Link:     Log                 
+    Link:     Log
 
     Log likelihood = -17586.699
 
@@ -244,8 +242,8 @@ gsem (yobs <- ibn.j i.x M1[i]@1 M2[i>id]@1, noconstant family(gaussian))
 
     Fitting fixed-effects model:
 
-    Iteration 0:  Log likelihood = -15825.816  
-    Iteration 1:  Log likelihood = -15825.816  
+    Iteration 0:  Log likelihood = -15825.816
+    Iteration 1:  Log likelihood = -15825.816
 
     Refining starting values:
 
@@ -254,16 +252,16 @@ gsem (yobs <- ibn.j i.x M1[i]@1 M2[i>id]@1, noconstant family(gaussian))
     Fitting full model:
 
     Iteration 0:  Log likelihood = -15573.441  (not concave)
-    Iteration 1:  Log likelihood = -15288.349  
-    Iteration 2:  Log likelihood = -15277.955  
-    Iteration 3:  Log likelihood = -15248.326  
-    Iteration 4:  Log likelihood = -15199.172  
-    Iteration 5:  Log likelihood = -15195.574  
-    Iteration 6:  Log likelihood = -15195.544  
-    Iteration 7:  Log likelihood = -15195.544  
+    Iteration 1:  Log likelihood = -15288.349
+    Iteration 2:  Log likelihood = -15277.955
+    Iteration 3:  Log likelihood = -15248.326
+    Iteration 4:  Log likelihood = -15199.172
+    Iteration 5:  Log likelihood = -15195.574
+    Iteration 6:  Log likelihood = -15195.544
+    Iteration 7:  Log likelihood = -15195.544
 
     Generalized structural equation model                    Number of obs = 4,360
-    Response: yobs    
+    Response: yobs
     Family:   Gaussian
     Link:     Identity
     Log likelihood = -15195.544
@@ -315,11 +313,11 @@ gsem ///
 
     Fitting fixed-effects model:
 
-    Iteration 0:  Log likelihood = -20425.271  
-    Iteration 1:  Log likelihood = -18341.449  
-    Iteration 2:  Log likelihood = -18324.004  
-    Iteration 3:  Log likelihood = -18323.957  
-    Iteration 4:  Log likelihood = -18323.957  
+    Iteration 0:  Log likelihood = -20425.271
+    Iteration 1:  Log likelihood = -18341.449
+    Iteration 2:  Log likelihood = -18324.004
+    Iteration 3:  Log likelihood = -18323.957
+    Iteration 4:  Log likelihood = -18323.957
 
     Refining starting values:
 
@@ -336,44 +334,44 @@ gsem ///
 
     Fitting full model:
 
-    Iteration 0:  Log likelihood = -17899.457  
+    Iteration 0:  Log likelihood = -17899.457
     Iteration 1:  Log likelihood =  -17697.12  (backed up)
     Iteration 2:  Log likelihood =  -17689.09  (backed up)
     Iteration 3:  Log likelihood = -17672.976  (backed up)
-    Iteration 4:  Log likelihood =  -17654.24  
-    Iteration 5:  Log likelihood = -17649.427  
-    Iteration 6:  Log likelihood =  -17641.68  
-    Iteration 7:  Log likelihood = -17634.953  
+    Iteration 4:  Log likelihood =  -17654.24
+    Iteration 5:  Log likelihood = -17649.427
+    Iteration 6:  Log likelihood =  -17641.68
+    Iteration 7:  Log likelihood = -17634.953
     Iteration 8:  Log likelihood = -17632.377  (backed up)
-    Iteration 9:  Log likelihood = -17625.577  
-    Iteration 10: Log likelihood = -17623.274  
-    Iteration 11: Log likelihood = -17615.286  
-    Iteration 12: Log likelihood = -17608.875  
-    Iteration 13: Log likelihood = -17605.247  
-    Iteration 14: Log likelihood = -17602.121  
-    Iteration 15: Log likelihood = -17591.085  
-    Iteration 16: Log likelihood = -17587.817  
-    Iteration 17: Log likelihood = -17586.995  
-    Iteration 18: Log likelihood = -17586.382  
-    Iteration 19: Log likelihood = -17585.699  
-    Iteration 20: Log likelihood = -17585.607  
-    Iteration 21: Log likelihood = -17585.605  
-    Iteration 22: Log likelihood = -17585.605  
-    Iteration 23: Log likelihood = -17585.605  
-    Iteration 24: Log likelihood = -17585.604  
-    Iteration 25: Log likelihood = -17585.604  
-    Iteration 26: Log likelihood = -17585.604  
+    Iteration 9:  Log likelihood = -17625.577
+    Iteration 10: Log likelihood = -17623.274
+    Iteration 11: Log likelihood = -17615.286
+    Iteration 12: Log likelihood = -17608.875
+    Iteration 13: Log likelihood = -17605.247
+    Iteration 14: Log likelihood = -17602.121
+    Iteration 15: Log likelihood = -17591.085
+    Iteration 16: Log likelihood = -17587.817
+    Iteration 17: Log likelihood = -17586.995
+    Iteration 18: Log likelihood = -17586.382
+    Iteration 19: Log likelihood = -17585.699
+    Iteration 20: Log likelihood = -17585.607
+    Iteration 21: Log likelihood = -17585.605
+    Iteration 22: Log likelihood = -17585.605
+    Iteration 23: Log likelihood = -17585.605
+    Iteration 24: Log likelihood = -17585.604
+    Iteration 25: Log likelihood = -17585.604
+    Iteration 26: Log likelihood = -17585.604
 
     Generalized structural equation model               Number of obs   =    5,335
 
     Response: yobs                                      Number of obs   =    4,360
-    Family:   Gaussian            
-    Link:     Identity            
+    Family:   Gaussian
+    Link:     Identity
 
     Response: t                                         Number of obs   =    5,335
     Family:   Weibull                                   No. of failures =      975
     Form:     Proportional hazards                      Time at risk    = 4,819.99
-    Link:     Log                 
+    Link:     Log
 
     Log likelihood = -17585.604
 
