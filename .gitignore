@@ -5,3 +5,4 @@
 *.stswp
 01-example-swjm/*.log
 02-example-swjm-individual/*.log
+python-venv/
