@@ -1,0 +1,127 @@
+---
+format: gfm
+jupyter: nbstata
+title: Improving convergence of the joint model estimation procedure
+---
+
+Sometimes the joint model for stepped wedge cluster-randomized trials with non-ignorable dropout fails to converge due to the increased computational complexity.
+In this document, we illustrate several steps and approaches that can be used to get the joint model to converge.
+
+We start by setting the version of the Stata interpreter to version 18; this means that the following code will continue to work in all future versions of Stata, even if Stata were to change.
+
+```{stata}
+version 18
+```
+
+# Data
+
+We use the following dataset for illustration purposes:
+
+```{stata}
+use "04-data.dta", clear
+codebook, compact
+```
+
+Note that this dataset is one of the datasets that did not converge in the simulation study with our default settings.
+
+The relevant columns are:
+
+* `i`, the cluster indicator variable;
+* `id`, the participant indicator variable;
+* `j`, the period indicator variable;
+* `x`, the binary treatment indicator variable;
+* `yobs`, the observed longitudinal outcome values;
+* `t0` and `t`, the time to dropout process in start-stop notation;
+* `d`, the dropout indicator variable.
+
+# Default settings
+
+Our experience suggests that convergence of the joint model improves when using the `startgrid` and `technique(bfgs)` options.
+`datagrid` instructs `gsem` to test a grid of possible starting values for the random effects, while `technique(bfgs)` instructs `gsem` to use the Broyden-Fletcher-Goldfarb-Shanno (BFGS) algorithm instead of Stata's modified Newton-Raphson (NR) algorithm, the default.
+
+The `gsem` code is as follows:
+
+```{stata}
+capture noisily gsem ///
+    (yobs <- ibn.j i.x M1[i]@1 M2[i>id]@1, noconstant family(gaussian)) ///
+    (t <- i.x M1[i] M2[i>id], family(weibull, failure(d) lt(t0))) ///
+	, startgrid technique(bfgs) nolog
+```
+
+Note that we prefix the call to `gsem` with `capture noisily` to capture the error (and continue compiling the document), and we use the `nolog` option to omit the iterations log.
+
+Using these settings, the BFGS algorithm fails to converge to a solution.
+
+# Using `gsem`'s default settings
+
+The first step we can try consists of using the default `gsem` settings:
+
+```{stata}
+capture noisily gsem ///
+    (yobs <- ibn.j i.x M1[i]@1 M2[i>id]@1, noconstant family(gaussian)) ///
+    (t <- i.x M1[i] M2[i>id], family(weibull, failure(d) lt(t0))) ///
+	, nolog
+```
+
+This did not work either.
+
+# Using the `difficult` option
+
+The second step we can try is to use the `difficult` option, with both BFGS and Stata's modified Newton-Raphson.
+This instructs Stata to use a different stepping algorithm in non-concave regions, which may help with convergence.
+
+```{stata}
+capture noisily gsem ///
+    (yobs <- ibn.j i.x M1[i]@1 M2[i>id]@1, noconstant family(gaussian)) ///
+    (t <- i.x M1[i] M2[i>id], family(weibull, failure(d) lt(t0))) ///
+	, difficult nolog
+```
+
+```{stata}
+capture noisily gsem ///
+    (yobs <- ibn.j i.x M1[i]@1 M2[i>id]@1, noconstant family(gaussian)) ///
+    (t <- i.x M1[i] M2[i>id], family(weibull, failure(d) lt(t0))) ///
+	, difficult technique(bfgs) nolog
+```
+
+Using a different stepping algorithm did not lead to convergence, with either of the methods.
+
+# Custom starting values
+
+The third step we can try is passing custom starting values to `gsem`.
+To this end, we first fit the corresponding linear mixed effects model (ignoring the dropout process):
+
+```{stata}
+gsem (yobs <- ibn.j i.x M1[i]@1 M2[i>id]@1, noconstant family(gaussian))
+```
+
+This model converged without issues.
+Then, we save the parameter estimates in a matrix named `bfrom`:
+
+```{stata}
+matrix bfrom = e(b)
+```
+
+Finally, we can pass these starting values to `gsem` using the `from` option:
+
+```{stata}
+gsem ///
+    (yobs <- ibn.j i.x M1[i]@1 M2[i>id]@1, noconstant family(gaussian)) ///
+    (t <- i.x M1[i] M2[i>id], family(weibull, failure(d) lt(t0))) ///
+	, from(bfrom) startgrid technique(bfgs)
+```
+
+Finally, this joint model converged to a solution.
+
+# Other options
+
+If the joint model did not converge after trying the steps above, there is still hope.
+Specifically, we suggest:
+
+1. Testing different maximisation algorithms (e.g., passing different options to the `technique` argument). Please consult the `gsem` manual to find all available options;
+
+1. Testing different combinations of the options introduced above;
+
+1. Testing a different software implementation, e.g., using the user-written `merlin` command (more details [here](https://arxiv.org/abs/1806.01615v1)).
+
+If the joint model still does not converge after trying all these steps, then one may need to simplify the model, e.g., because some coefficients are not identifiable using the available data.
