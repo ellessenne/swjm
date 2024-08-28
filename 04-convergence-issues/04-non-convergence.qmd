@@ -86,13 +86,27 @@ capture noisily gsem ///
 
 Using a different stepping algorithm did not lead to convergence, with either of the methods.
 
+# Increasing the number of integration points
+
+Optimising the likelihood of the joint model requires integrating over the random effects.
+Stata's `gsem` command uses mean-variance adaptive Gaussian quadrature, with a default of 7 integration points (`intpoints(7)`): we can increase this number to get a more accurate approximation, at the cost of increased computational time, e.g., by using 15 points:
+
+```{stata}
+capture noisily gsem ///
+    (yobs <- ibn.j i.x M1[i]@1 M2[i>id]@1, noconstant family(gaussian)) ///
+    (t <- i.x M1[i] M2[i>id], family(weibull, failure(d) lt(t0))) ///
+	, startgrid technique(bfgs) nolog intpoints(15)
+```
+
+Nonetheless, this did not help the algorithm to converge here.
+
 # Custom starting values
 
-The third step we can try is passing custom starting values to `gsem`.
+The fourth step we can try is passing custom starting values to `gsem`.
 To this end, we first fit the corresponding linear mixed effects model (ignoring the dropout process):
 
 ```{stata}
-gsem (yobs <- ibn.j i.x M1[i]@1 M2[i>id]@1, noconstant family(gaussian))
+gsem (yobs <- ibn.j i.x M1[i]@1 M2[i>id]@1, noconstant family(gaussian)), nolog
 ```
 
 This model converged without issues.
@@ -108,10 +122,10 @@ Finally, we can pass these starting values to `gsem` using the `from` option:
 gsem ///
     (yobs <- ibn.j i.x M1[i]@1 M2[i>id]@1, noconstant family(gaussian)) ///
     (t <- i.x M1[i] M2[i>id], family(weibull, failure(d) lt(t0))) ///
-	, from(bfrom) startgrid technique(bfgs)
+	, from(bfrom) startgrid technique(bfgs) nolog
 ```
 
-Finally, this joint model converged to a solution.
+Finally, this joint model did converged to a solution.
 
 # Other options
 
@@ -122,6 +136,6 @@ Specifically, we suggest:
 
 1. Testing different combinations of the options introduced above;
 
-1. Testing a different software implementation, e.g., using the user-written `merlin` command (more details [here](https://arxiv.org/abs/1806.01615v1)).
+1. Testing a different software implementation, e.g., using the user-written `merlin` command (more details [here](https://doi.org/10.1177/1536867X20976311) and [here](https://arxiv.org/abs/1806.01615v1)).
 
 If the joint model still does not converge after trying all these steps, then one may need to simplify the model, e.g., because some coefficients are not identifiable using the available data.

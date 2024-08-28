@@ -229,36 +229,36 @@ capture noisily gsem ///
 Using a different stepping algorithm did not lead to convergence, with
 either of the methods.
 
+# Increasing the number of integration points
+
+Optimising the likelihood of the joint model requires integrating over
+the random effects. Stata’s `gsem` command uses mean-variance adaptive
+Gaussian quadrature, with a default of 7 integration points
+(`intpoints(7)`): we can increase this number to get a more accurate
+approximation, at the cost of increased computational time, e.g., by
+using 15 points:
+
+``` stata
+capture noisily gsem ///
+    (yobs <- ibn.j i.x M1[i]@1 M2[i>id]@1, noconstant family(gaussian)) ///
+    (t <- i.x M1[i] M2[i>id], family(weibull, failure(d) lt(t0))) ///
+    , startgrid technique(bfgs) nolog intpoints(15)
+```
+
+    cannot compute an improvement -- flat region encountered
+
+Nonetheless, this did not help the algorithm to converge here.
+
 # Custom starting values
 
-The third step we can try is passing custom starting values to `gsem`.
+The fourth step we can try is passing custom starting values to `gsem`.
 To this end, we first fit the corresponding linear mixed effects model
 (ignoring the dropout process):
 
 ``` stata
-gsem (yobs <- ibn.j i.x M1[i]@1 M2[i>id]@1, noconstant family(gaussian))
+gsem (yobs <- ibn.j i.x M1[i]@1 M2[i>id]@1, noconstant family(gaussian)), nolog
 ```
 
-
-    Fitting fixed-effects model:
-
-    Iteration 0:  Log likelihood = -15825.816
-    Iteration 1:  Log likelihood = -15825.816
-
-    Refining starting values:
-
-    Grid node 0:  Log likelihood = -15573.441
-
-    Fitting full model:
-
-    Iteration 0:  Log likelihood = -15573.441  (not concave)
-    Iteration 1:  Log likelihood = -15288.349
-    Iteration 2:  Log likelihood = -15277.955
-    Iteration 3:  Log likelihood = -15248.326
-    Iteration 4:  Log likelihood = -15199.172
-    Iteration 5:  Log likelihood = -15195.574
-    Iteration 6:  Log likelihood = -15195.544
-    Iteration 7:  Log likelihood = -15195.544
 
     Generalized structural equation model                    Number of obs = 4,360
     Response: yobs
@@ -307,60 +307,9 @@ option:
 gsem ///
     (yobs <- ibn.j i.x M1[i]@1 M2[i>id]@1, noconstant family(gaussian)) ///
     (t <- i.x M1[i] M2[i>id], family(weibull, failure(d) lt(t0))) ///
-    , from(bfrom) startgrid technique(bfgs)
+    , from(bfrom) startgrid technique(bfgs) nolog
 ```
 
-
-    Fitting fixed-effects model:
-
-    Iteration 0:  Log likelihood = -20425.271
-    Iteration 1:  Log likelihood = -18341.449
-    Iteration 2:  Log likelihood = -18324.004
-    Iteration 3:  Log likelihood = -18323.957
-    Iteration 4:  Log likelihood = -18323.957
-
-    Refining starting values:
-
-    Grid node 0:  Log likelihood = -17899.457
-    Grid node 1:  Log likelihood = -19054.862
-    Grid node 2:  Log likelihood = -18882.525
-    Grid node 3:  Log likelihood = -18158.564
-    Grid node 4:  Log likelihood = -19018.855
-    Grid node 5:  Log likelihood = -18852.216
-    Grid node 6:  Log likelihood = -18152.002
-    Grid node 7:  Log likelihood = -19032.516
-    Grid node 8:  Log likelihood = -18866.722
-    Grid node 9:  Log likelihood = -18170.503
-
-    Fitting full model:
-
-    Iteration 0:  Log likelihood = -17899.457
-    Iteration 1:  Log likelihood =  -17697.12  (backed up)
-    Iteration 2:  Log likelihood =  -17689.09  (backed up)
-    Iteration 3:  Log likelihood = -17672.976  (backed up)
-    Iteration 4:  Log likelihood =  -17654.24
-    Iteration 5:  Log likelihood = -17649.427
-    Iteration 6:  Log likelihood =  -17641.68
-    Iteration 7:  Log likelihood = -17634.953
-    Iteration 8:  Log likelihood = -17632.377  (backed up)
-    Iteration 9:  Log likelihood = -17625.577
-    Iteration 10: Log likelihood = -17623.274
-    Iteration 11: Log likelihood = -17615.286
-    Iteration 12: Log likelihood = -17608.875
-    Iteration 13: Log likelihood = -17605.247
-    Iteration 14: Log likelihood = -17602.121
-    Iteration 15: Log likelihood = -17591.085
-    Iteration 16: Log likelihood = -17587.817
-    Iteration 17: Log likelihood = -17586.995
-    Iteration 18: Log likelihood = -17586.382
-    Iteration 19: Log likelihood = -17585.699
-    Iteration 20: Log likelihood = -17585.607
-    Iteration 21: Log likelihood = -17585.605
-    Iteration 22: Log likelihood = -17585.605
-    Iteration 23: Log likelihood = -17585.605
-    Iteration 24: Log likelihood = -17585.604
-    Iteration 25: Log likelihood = -17585.604
-    Iteration 26: Log likelihood = -17585.604
 
     Generalized structural equation model               Number of obs   =    5,335
 
@@ -413,7 +362,7 @@ gsem ///
       var(e.yobs)|    40.5172   1.017378                      38.57145    42.56111
     ------------------------------------------------------------------------------
 
-Finally, this joint model converged to a solution.
+Finally, this joint model did converged to a solution.
 
 # Other options
 
@@ -428,6 +377,7 @@ is still hope. Specifically, we suggest:
 
 3.  Testing a different software implementation, e.g., using the
     user-written `merlin` command (more details
+    [here](https://doi.org/10.1177/1536867X20976311) and
     [here](https://arxiv.org/abs/1806.01615v1)).
 
 If the joint model still does not converge after trying all these steps,
