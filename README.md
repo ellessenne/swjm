@@ -3,6 +3,10 @@
 This repository contains additional material for the manuscript titled "Analysis of cohort stepped wedge cluster-randomized trials with non-ignorable dropout via joint modeling", which is currently submitted for publication.
 A preprint is [available on arXiv](https://arxiv.org/abs/2404.14840).
 
+The latest released version of this repository is archived on Zenodo at the following DOI: [10.5281/zenodo.13843867](https://zenodo.org/doi/10.5281/zenodo.13843866)
+
+[![DOI](https://zenodo.org/badge/630868056.svg)](https://zenodo.org/doi/10.5281/zenodo.13843866)
+
 ## Table of Content
 
 The content of this repository is organised as follows:
@@ -28,4 +32,4 @@ devtools::install_github("RedDoorAnalytics/simswjm")
 ## License
 
 All code included in this repository is released under the [MIT License](LICENSE.md).
-If you find this useful, please cite the manuscript in your work.
+If you find this useful, please cite the manuscript and/or this repository in your work.
