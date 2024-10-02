@@ -25,8 +25,8 @@ The content of this repository is organised as follows:
 Note that the simulation code requires the {simswjm} R package, which can be installed from [GitHub](https://github.com/RedDoorAnalytics/simswjm) with the following code:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("RedDoorAnalytics/simswjm")
+# install.packages("remotes")
+remotes::install_github("RedDoorAnalytics/simswjm")
 ```
 
 ## License
