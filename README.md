@@ -1,9 +1,7 @@
 # Analysis of cohort stepped wedge cluster-randomized trials with non-ignorable dropout via joint modeling
 
 This repository contains additional material for the manuscript titled "Analysis of cohort stepped wedge cluster-randomized trials with non-ignorable dropout via joint modeling", which is currently submitted for publication.
-A preprint is [available on arXiv](https://arxiv.org/abs/2404.14840).
-
-The latest released version of this repository is archived on Zenodo at the following DOI: [10.5281/zenodo.13843867](https://zenodo.org/doi/10.5281/zenodo.13843866)
+A preprint is [available on arXiv](https://arxiv.org/abs/2404.14840), and the latest released version of this repository is archived on [Zenodo](https://zenodo.org/doi/10.5281/zenodo.13843866).
 
 [![DOI](https://zenodo.org/badge/630868056.svg)](https://zenodo.org/doi/10.5281/zenodo.13843866)
 
